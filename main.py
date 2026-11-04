@@ -3,12 +3,32 @@ from typing import Dict, List
 
 import json
 
+class TenantSettlement(BaseModel):
+    tenant_name: str
+    month: int
+    year: int
+    apartment_settlement_id: str
+    rent_cost: float
+    bills_cost: float
+    total_transfers: float
+
+    @property
+    def total_cost(self) -> float:
+        """Suma wszystkich kosztów (czynsz + rachunki)."""
+        return self.rent_cost + self.bills_cost
+
+    @property
+    def balance(self) -> float:
+        """Saldo (przelewy minus koszty)."""
+        return self.total_transfers - self.total_cost
+
 
 class Parameters(BaseModel):
     apartments_json_path: str = 'data/apartments.json'
     tenants_json_path: str = 'data/tenants.json'
     transfers_json_path: str = 'data/transfers.json'
     bills_json_path: str = 'data/bills.json'
+    tenant_settlements_json_path: str = 'data/tenant_settlements.json'
 
 
 class Room(BaseModel):
